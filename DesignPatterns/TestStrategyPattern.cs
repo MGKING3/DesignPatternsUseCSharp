@@ -37,7 +37,7 @@ namespace com.mg.Test.DesignPatterns
 
          声明：详细注释请参见普通方法，别的位置不冗余
         */
-        static void Main(string[] args)
+        public static void test()
         {
 
 #if NORMAL
@@ -57,7 +57,6 @@ namespace com.mg.Test.DesignPatterns
             //为巨魔更改武器成匕首，fight
             troll.weapon = new Knife();
             troll.fight();
-            Console.ReadKey();
 
             #endregion
 
@@ -85,7 +84,6 @@ namespace com.mg.Test.DesignPatterns
             troll.fight("凶残地");
             troll.Weapon = knife;
             troll.fight("狡猾地");
-            Console.ReadKey();
 
             #endregion
 
