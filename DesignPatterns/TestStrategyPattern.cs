@@ -1,6 +1,13 @@
-﻿using System;
+﻿//定义NORMAL，代表使用普通方法
+//#define NORMAL
+//如果没有定义NORMAL，则定义DELEGATE，代表使用委托方法
+#if !NORMAL
+#define DELEGATE
+#endif
+using System;
+using System.Text;
 
-namespace com.mg.Utils.DesignPatterns
+namespace com.mg.Test.DesignPatterns
 {
     /// <summary>
     /// 【策略模式】：
@@ -27,9 +34,16 @@ namespace com.mg.Utils.DesignPatterns
          中的练习题，对【策略模式】进行简单的实现、说明，该练习题是这样的：
          角色可以使用武器战斗，但是武器是独立于角色存在的，不依附于任一种
 	     角色，即角色和武器并没有所谓的对应关系
+
+         声明：详细注释请参见普通方法，别的位置不冗余
         */
         static void Main(string[] args)
         {
+
+#if NORMAL
+
+            #region 测试普通方法
+
             //定义四个角色
             Character king = new King();
             Character queen = new Queen();
@@ -44,8 +58,46 @@ namespace com.mg.Utils.DesignPatterns
             troll.weapon = new Knife();
             troll.fight();
             Console.ReadKey();
+
+            #endregion
+
+#elif DELEGATE
+
+            #region 测试委托方法
+            //使用一系列的符合算法族的委托代表武器（即一系列的Func<string,string>）
+            Func<string, string> sword = (adj) => { return "使用宝剑" + adj; };
+            Func<string, string> bowAndArrow = (adj) => { return "使用弓箭" + adj; };
+            Func<string, string> knife = (adj) => { return "使用匕首" + adj; };
+            Func<string, string> axe = (adj) => { return "使用斧头" + adj; };
+            //初始化角色及其武器
+            Character king = new King();
+            king.Weapon = sword;
+            Character queen = new Queen();
+            queen.Weapon = bowAndArrow;
+            Character knight = new Knight();
+            knight.Weapon = sword;
+            Character troll = new Troll();
+            troll.Weapon = axe;
+            //战斗
+            king.fight("英勇地");
+            queen.fight("优雅地");
+            knight.fight("无畏地");
+            troll.fight("凶残地");
+            troll.Weapon = knife;
+            troll.fight("狡猾地");
+            Console.ReadKey();
+
+            #endregion
+
+#endif
+
         }
     }
+
+    #region 普通方法相关定义
+
+#if NORMAL
+
     /// <summary>
     /// 角色类，抽象 2016.12.20 By MG
     /// </summary>
@@ -160,7 +212,7 @@ namespace com.mg.Utils.DesignPatterns
         /// 具体武器的使用留待具体类实现
         /// </summary>
         /// <returns>使用武器的简要说明</returns>
-        String useWeapon();
+        string useWeapon();
     }
     /// <summary>
     /// 宝剑类，实现武器接口 2016.12.20 By MG
@@ -171,7 +223,7 @@ namespace com.mg.Utils.DesignPatterns
         /// 使用宝剑
         /// </summary>
         /// <returns>使用宝剑的简要说明</returns>
-        public String useWeapon()
+        public string useWeapon()
         {
             return "使用宝剑";
         }
@@ -185,7 +237,7 @@ namespace com.mg.Utils.DesignPatterns
         /// 使用弓箭
         /// </summary>
         /// <returns>使用弓箭的简要说明</returns>
-        public String useWeapon()
+        public string useWeapon()
         {
             return "使用弓箭";
         }
@@ -199,7 +251,7 @@ namespace com.mg.Utils.DesignPatterns
         /// 使用匕首
         /// </summary>
         /// <returns>使用匕首的简要说明</returns>
-        public String useWeapon()
+        public string useWeapon()
         {
             return "使用匕首";
         }
@@ -213,9 +265,68 @@ namespace com.mg.Utils.DesignPatterns
         /// 使用斧头
         /// </summary>
         /// <returns>使用斧头的简要说明</returns>
-        public String useWeapon()
+        public string useWeapon()
         {
             return "使用斧头";
         }
     }
+
+#endif
+
+    #endregion
+
+    #region 接口方法相关定义
+
+#if DELEGATE
+
+    abstract class Character
+    {
+        private Func<string,string> weapon;
+        public Func<string, string> Weapon
+        {
+            get
+            {
+                return weapon;
+            }
+
+            set
+            {
+                weapon = value;
+            }
+        }
+        public abstract void fight(string adj);
+    }
+    class King : Character
+    {
+        public override void fight(string adj)
+        {
+            Console.WriteLine("国王" + Weapon(adj) + "战斗");
+        }
+    }
+    class Queen : Character
+    {
+        public override void fight(string adj)
+        {
+            Console.WriteLine("皇后" + Weapon(adj) + "战斗");
+        }
+    }
+    class Knight : Character
+    {
+        public override void fight(string adj)
+        {
+            Console.WriteLine("骑士" + Weapon(adj) + "战斗");
+        }
+    }
+    class Troll : Character
+    {
+        public override void fight(string adj)
+        {
+            Console.WriteLine("巨魔" + Weapon(adj) + "战斗");
+        }
+    }
+
+#endif
+
+    #endregion
+    
 }
