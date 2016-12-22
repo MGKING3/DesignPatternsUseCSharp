@@ -97,7 +97,7 @@ namespace com.mg.Test.DesignPatterns
 #if NORMAL
 
     /// <summary>
-    /// 角色类，抽象 2016.12.20 By MG
+    /// 角色类，抽象
     /// </summary>
     abstract class Character
     {
@@ -122,7 +122,7 @@ namespace com.mg.Test.DesignPatterns
         public abstract void fight();
     }
     /// <summary>
-    /// 国王类，继承于角色类 2016.12.20 By MG
+    /// 国王类，继承于角色类
     /// </summary>
     class King : Character
     {
@@ -142,7 +142,7 @@ namespace com.mg.Test.DesignPatterns
         }
     }
     /// <summary>
-    /// 皇后类，继承于角色类 2016.12.20 By MG
+    /// 皇后类，继承于角色类
     /// </summary>
     class Queen : Character
     {
@@ -162,7 +162,7 @@ namespace com.mg.Test.DesignPatterns
         }
     }
     /// <summary>
-    /// 骑士类，继承于角色类 2016.12.20 By MG
+    /// 骑士类，继承于角色类
     /// </summary>
     class Knight : Character
     {
@@ -182,7 +182,7 @@ namespace com.mg.Test.DesignPatterns
         }
     }
     /// <summary>
-    /// 巨魔类，继承于角色类 2016.12.20 By MG
+    /// 巨魔类，继承于角色类
     /// </summary>
     class Troll : Character
     {
@@ -202,7 +202,7 @@ namespace com.mg.Test.DesignPatterns
         }
     }
     /// <summary>
-    /// 武器接口，上述抽取出来的“武器库” 2016.12.20 By MG
+    /// 武器接口，上述抽取出来的“武器库”
     /// </summary>
     interface IWeapon
     {
@@ -213,7 +213,7 @@ namespace com.mg.Test.DesignPatterns
         string useWeapon();
     }
     /// <summary>
-    /// 宝剑类，实现武器接口 2016.12.20 By MG
+    /// 宝剑类，实现武器接口
     /// </summary>
     class Sword : IWeapon
     {
@@ -227,7 +227,7 @@ namespace com.mg.Test.DesignPatterns
         }
     }
     /// <summary>
-    /// 弓箭类，实现武器接口 2016.12.20 By MG
+    /// 弓箭类，实现武器接口
     /// </summary>
     class BowAndArrow : IWeapon
     {
@@ -241,7 +241,7 @@ namespace com.mg.Test.DesignPatterns
         }
     }
     /// <summary>
-    /// 匕首类，实现武器接口 2016.12.20 By MG
+    /// 匕首类，实现武器接口
     /// </summary>
     class Knife : IWeapon
     {
@@ -255,7 +255,7 @@ namespace com.mg.Test.DesignPatterns
         }
     }
     /// <summary>
-    /// 斧头类，实现武器接口 2016.12.20 By MG
+    /// 斧头类，实现武器接口
     /// </summary>
     class Axe : IWeapon
     {

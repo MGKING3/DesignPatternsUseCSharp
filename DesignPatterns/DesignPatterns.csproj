@@ -43,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IObservable.cs" />
+    <Compile Include="IObserver.cs" />
     <Compile Include="Test.cs" />
     <Compile Include="TestObserverPattern.cs" />
     <Compile Include="TestStrategyPattern.cs" />
