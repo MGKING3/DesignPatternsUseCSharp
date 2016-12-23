@@ -47,6 +47,9 @@ namespace com.mg.Test.DesignPatterns
     ///  而且也可以同时订阅多家newspaper office的报纸（即一个观察者可以同时观察多个被观察者）
     ///  </para>
     ///  <para>
+    ///  观察者模式的一个典型用法就是MVC（Model-View-Controller）模式，即（模型-视图-控制器）模式
+    ///  </para>
+    ///  <para>
     ///  2016.12.22
     ///  By MG
     ///  </para>
