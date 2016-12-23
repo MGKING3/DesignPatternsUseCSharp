@@ -69,6 +69,7 @@ namespace com.mg.Test.DesignPatterns
             NewspaperOffice no = new NewspaperOffice("天天报社");
             Subscriber subA = new Subscriber("订阅者A");
             Subscriber subB = new Subscriber("订阅者B");
+            //注册订阅者A、B
             no.addObserver(subA);
             no.addObserver(subB);
 #if PUSH
@@ -78,6 +79,7 @@ namespace com.mg.Test.DesignPatterns
             no["天天下午茶"] = 8;
             Console.WriteLine();
             //只有A订阅的情况，修改《天天晚报》的售价
+            //注销订阅者B
             no.removeObserver(subB);
             Console.WriteLine("第二次修改：将《天天晚报》的售价改为6");
             no["天天晚报"] = 6;
@@ -88,7 +90,13 @@ namespace com.mg.Test.DesignPatterns
             本来notifyObserverPush函数只能由NewspaperOffice调用，
             即只有报社本身才能在数据改变的时候通知所有的订阅者（推方式），
             而不是任由其他人或事物在其它时间段、其它位置调用！！
-            因此普通方法不可取，而改进方法是不对外公开notifyObserverPush函数接口
+            因此普通方法不可取，而改进方法是不对外公开notifyObserverPush函数接口，
+            但是，这样的话，势必需要将notifyObserverPush函数封装在被观察者里，
+            那样的话，就如《Head First Design Patterns》里提及的Java中使用
+            java.uitl.Observer和java.util.Observable一般，被观察者需要继承Observable，
+            丧失了松耦合。如果在C#中想要用这种普通方法的话，需要建立一个基础的被观察者类，
+            让需要实现被观察者功能的类继承该类，这样能保证安全调用notifyObserverPush函数，
+            但是却丧失了松耦合。综上，该方法不可取
             */
             Console.WriteLine();
             no.notifyObserverPush("不安全触发！！！");
@@ -99,6 +107,7 @@ namespace com.mg.Test.DesignPatterns
             no["天天下午茶"] = 18;
             Console.WriteLine();
             //只有A订阅的情况，修改《天天晚报》的售价
+            //注销订阅者B
             no.removeObserver(subB);
             Console.WriteLine("第二次修改：将《天天晚报》的售价改为16");
             no["天天晚报"] = 16;
@@ -109,7 +118,13 @@ namespace com.mg.Test.DesignPatterns
             本来notifyObserver函数只能由NewspaperOffice调用，
             即只有报社本身才能在数据改变的时候通知所有的订阅者（拉方式），
             而不是任由其他人或事物在其它时间段、其它位置调用！！
-            因此普通方法不可取，而改进方法是不对外公开notifyObserver函数接口
+            因此普通方法不可取，而改进方法是不对外公开notifyObserver函数接口，
+            但是，这样的话，势必需要将notifyObserver函数封装在被观察者里，
+            那样的话，就如《Head First Design Patterns》里提及的Java中使用
+            java.uitl.Observer和java.util.Observable一般，被观察者需要继承Observable，
+            丧失了松耦合。如果在C#中想要用这种普通方法的话，需要建立一个基础的被观察者类，
+            让需要实现被观察者功能的类继承该类，这样能保证安全调用notifyObserver函数，
+            但是却丧失了松耦合。综上，该方法不可取
             */
             Console.WriteLine("\n不安全触发！！！");
             no.notifyObserver();
