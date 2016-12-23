@@ -217,6 +217,11 @@ namespace com.mg.Test.DesignPatterns
         /// </summary>
         private List<Subscriber> list = null;
         private Dictionary<string, int> newspapers = null;
+        /// <summary>
+        /// 索引器，根据刊物名获取或设置售价
+        /// </summary>
+        /// <param name="key">刊物名</param>
+        /// <returns>售价</returns>
         public int this[string key]
         {
             get
@@ -289,7 +294,11 @@ namespace com.mg.Test.DesignPatterns
                 sub.updateData(this, dataPack);
             }
         }
-
+        /// <summary>
+        /// 删除订阅者
+        /// </summary>
+        /// <param name="observer">订阅者</param>
+        /// <returns>删除成功与否</returns>
         public bool removeObserver(Subscriber observer)
         {
             return list.Remove(observer);
@@ -299,17 +308,29 @@ namespace com.mg.Test.DesignPatterns
     class Subscriber : IObserver<NewspaperOffice, string>, Utils.DesignPatterns.ObserverPattern.IObserver<NewspaperOffice>
     {
         private string name;
+        /// <summary>
+        /// 构造函数，自定义订阅者名字
+        /// </summary>
+        /// <param name="name">订阅者名字</param>
         public Subscriber(string name)
         {
             this.name = name;
         }
+        /// <summary>
+        /// 被观察者数据改变时调用（推方式）
+        /// </summary>
+        /// <param name="observable">被观察者</param>
+        /// <param name="dataPack">数据包</param>
         public void updateData(NewspaperOffice observable, string dataPack)
         {
             Console.WriteLine("**********" + name + "(推方式)**********");
             Console.WriteLine("消息： " + dataPack);
             Console.WriteLine("******************************");
         }
-
+        /// <summary>
+        /// 被观察者数据改变时调用（拉方式）
+        /// </summary>
+        /// <param name="observable">被观察者</param>
         public void updateDataPull(NewspaperOffice observable)
         {
             Console.WriteLine("**********" + name + "(拉方式)**********");
@@ -341,10 +362,21 @@ namespace com.mg.Test.DesignPatterns
             }
         }
         public delegate void PushHolder(NewspaperOffice observable, string data);
+        /// <summary>
+        /// 作为“推方式”的注册注销事件，外界注册注销均需通过该事件
+        /// </summary>
         public event PushHolder pushHolder;
         public delegate void PullHolder(NewspaperOffice observable);
+        /// <summary>
+        /// 作为“拉方式”的注册注销事件，外界注册注销均需通过该事件
+        /// </summary>
         public event PullHolder pullHolder;
         private Dictionary<string, int> newspapers = null;
+        /// <summary>
+        /// 索引器，根据刊物名获得或设置售价
+        /// </summary>
+        /// <param name="key">刊物名</param>
+        /// <returns>售价</returns>
         public int this[string key]
         {
             get
@@ -390,17 +422,29 @@ namespace com.mg.Test.DesignPatterns
     class Subscriber
     {
         private string name;
+        /// <summary>
+        /// 构造函数，自定义订阅者名字
+        /// </summary>
+        /// <param name="name">订阅者名字</param>
         public Subscriber(string name)
         {
             this.name = name;
         }
+        /// <summary>
+        /// 被观察者数据改变时调用（推方式）
+        /// </summary>
+        /// <param name="observable">被观察者</param>
+        /// <param name="dataPack">数据包</param>
         public void updatePush(NewspaperOffice observable, string dataPack)
         {
             Console.WriteLine("**********" + name + "(推方式)**********");
             Console.WriteLine("消息： " + dataPack);
             Console.WriteLine("******************************");
         }
-
+        /// <summary>
+        /// 被观察者数据改变时调用（拉方式）
+        /// </summary>
+        /// <param name="observable">数据包</param>
         public void updatePull(NewspaperOffice observable)
         {
             Console.WriteLine("**********" + name + "(拉方式)**********");
