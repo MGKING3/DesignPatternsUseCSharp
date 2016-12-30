@@ -130,7 +130,7 @@ namespace com.mg.Test.DesignPatterns
             但是却丧失了松耦合。综上，该方法不可取
             */
             Console.WriteLine("\n不安全触发！！！");
-            no.notifyObserver();
+            no.notifyObserverPull();
 #endif
             #endregion
 
@@ -245,7 +245,7 @@ namespace com.mg.Test.DesignPatterns
 
 #elif PULL
                     //拉方式
-                    notifyObserver();
+                    notifyObserverPull();
 #endif
                 }
             }
@@ -277,7 +277,7 @@ namespace com.mg.Test.DesignPatterns
         /// <summary>
         /// 数据变化通知观察者时调用（拉方式）
         /// </summary>
-        public void notifyObserver()
+        public void notifyObserverPull()
         {
             foreach(Subscriber sub in list)
             {
@@ -291,7 +291,7 @@ namespace com.mg.Test.DesignPatterns
         public void notifyObserverPush(string dataPack)
         {
             foreach(Subscriber sub in list){
-                sub.updateData(this, dataPack);
+                sub.updateDataPush(this, dataPack);
             }
         }
         /// <summary>
@@ -321,7 +321,7 @@ namespace com.mg.Test.DesignPatterns
         /// </summary>
         /// <param name="observable">被观察者</param>
         /// <param name="dataPack">数据包</param>
-        public void updateData(NewspaperOffice observable, string dataPack)
+        public void updateDataPush(NewspaperOffice observable, string dataPack)
         {
             Console.WriteLine("**********" + name + "(推方式)**********");
             Console.WriteLine("消息： " + dataPack);
