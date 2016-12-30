@@ -36,6 +36,6 @@ namespace com.mg.Utils.DesignPatterns.ObserverPattern
         /// </summary>
         /// <param name="observable">被观察者</param>
         /// <param name="dataPack">被观察者推的数据</param>
-        void updateData(TIObservable observable, TIDataPack dataPack);
+        void updateDataPush(TIObservable observable, TIDataPack dataPack);
     }
 }

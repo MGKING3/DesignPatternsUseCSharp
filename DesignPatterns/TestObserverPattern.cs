@@ -66,7 +66,7 @@ namespace com.mg.Test.DesignPatterns
         {
 #if NORMAL
 
-            #region 测试普通方法
+            #region 测试普通方法（不推荐使用）
 
             //定义报社和订阅者A、B
             NewspaperOffice no = new NewspaperOffice("天天报社");
@@ -136,7 +136,7 @@ namespace com.mg.Test.DesignPatterns
 
 #elif EVENT
 
-            #region 测试事件方法
+            #region 测试事件方法（推荐使用）
 
             //定义报社和订阅者A、B
             NewspaperOffice no = new NewspaperOffice("天天报社");
@@ -145,15 +145,15 @@ namespace com.mg.Test.DesignPatterns
 #if PUSH
             //推方式
             //注册订阅者A、B
-            no.pushHolder += subA.updatePush;
-            no.pushHolder += subB.updatePush;
+            no.pushHolder += subA.updateDataPush;
+            no.pushHolder += subB.updateDataPush;
             //A和B都有订阅的情况，修改《天天下午茶》的售价
             Console.WriteLine("第一次修改：将《天天下午茶》的售价改为8");
             no["天天下午茶"] = 8;
             Console.WriteLine();
             //只有A订阅的情况，修改《天天晚报》的售价
             //注销订阅者B
-            no.pushHolder -= subB.updatePush;
+            no.pushHolder -= subB.updateDataPush;
             Console.WriteLine("第二次修改：将《天天晚报》的售价改为6");
             no["天天晚报"] = 6;
 
@@ -167,15 +167,15 @@ namespace com.mg.Test.DesignPatterns
 #elif PULL
             //拉方式
             //注册订阅者A、B
-            no.pullHolder += subA.updatePull;
-            no.pullHolder += subB.updatePull;
+            no.pullHolder += subA.updateDataPull;
+            no.pullHolder += subB.updateDataPull;
             //A和B都有订阅的情况，修改《天天下午茶》的售价
             Console.WriteLine("第一次修改：将《天天下午茶》的售价改为18");
             no["天天下午茶"] = 18;
             Console.WriteLine();
             //只有A订阅的情况，修改《天天晚报》的售价
             //注销订阅者B
-            no.pullHolder -= subB.updatePull;
+            no.pullHolder -= subB.updateDataPull;
             Console.WriteLine("第二次修改：将《天天晚报》的售价改为16");
             no["天天晚报"] = 16;
 
@@ -348,7 +348,7 @@ namespace com.mg.Test.DesignPatterns
 
 #if EVENT
 
-    class NewspaperOffice
+    class NewspaperOffice : IObservableEvent<NewspaperOffice>,IObservableEvent<NewspaperOffice,string>
     {
         private string name;
         /// <summary>
@@ -361,16 +361,15 @@ namespace com.mg.Test.DesignPatterns
                 return name;
             }
         }
-        public delegate void PushHolder(NewspaperOffice observable, string data);
         /// <summary>
         /// 作为“推方式”的注册注销事件，外界注册注销均需通过该事件
         /// </summary>
-        public event PushHolder pushHolder;
-        public delegate void PullHolder(NewspaperOffice observable);
+        public event Action<NewspaperOffice, string> pushHolder;
         /// <summary>
         /// 作为“拉方式”的注册注销事件，外界注册注销均需通过该事件
         /// </summary>
-        public event PullHolder pullHolder;
+        public event Action<NewspaperOffice> pullHolder;
+
         private Dictionary<string, int> newspapers = null;
         /// <summary>
         /// 索引器，根据刊物名获得或设置售价
@@ -419,7 +418,7 @@ namespace com.mg.Test.DesignPatterns
         }
     }
 
-    class Subscriber
+    class Subscriber : Utils.DesignPatterns.ObserverPattern.IObserver<NewspaperOffice>, IObserver<NewspaperOffice,string>
     {
         private string name;
         /// <summary>
@@ -435,7 +434,7 @@ namespace com.mg.Test.DesignPatterns
         /// </summary>
         /// <param name="observable">被观察者</param>
         /// <param name="dataPack">数据包</param>
-        public void updatePush(NewspaperOffice observable, string dataPack)
+        public void updateDataPush(NewspaperOffice observable, string dataPack)
         {
             Console.WriteLine("**********" + name + "(推方式)**********");
             Console.WriteLine("消息： " + dataPack);
@@ -445,7 +444,7 @@ namespace com.mg.Test.DesignPatterns
         /// 被观察者数据改变时调用（拉方式）
         /// </summary>
         /// <param name="observable">数据包</param>
-        public void updatePull(NewspaperOffice observable)
+        public void updateDataPull(NewspaperOffice observable)
         {
             Console.WriteLine("**********" + name + "(拉方式)**********");
             Console.WriteLine("我所关心的是报社的名称： " + observable.Name);

@@ -43,7 +43,7 @@ namespace com.mg.Utils.DesignPatterns.ObserverPattern
         /// <summary>
         /// 被观察者数据变化时调用，通知观察者（拉方式）
         /// </summary>
-        void notifyObserver();
+        void notifyObserverPull();
     }
 
     /// <summary>
@@ -61,5 +61,36 @@ namespace com.mg.Utils.DesignPatterns.ObserverPattern
         /// </summary>
         /// <param name="dataPack">包含被观察者推给观察者的数据</param>
         void notifyObserverPush(TIDataPack dataPack);
+    }
+
+    /// <summary>
+    /// 被观察者接口（拉方式，event）
+    /// <para>
+    /// 2016.12.30 By MG
+    /// </para>
+    /// </summary>
+    /// <typeparam name="TIObserver">观察者接口（拉方式）</typeparam>
+    interface IObservableEvent<TIObserver>
+    {
+        /// <summary>
+        /// 被观察者数据变化时调用，通知观察者（推方式，event）
+        /// </summary>
+        event Action<TIObserver> pullHolder;
+    }
+
+    /// <summary>
+    /// 被观察者接口（推方式，event）
+    /// <para>
+    /// 2016.12.30 By MG
+    /// </para>
+    /// </summary>
+    /// <typeparam name="TIObserver">观察者接口（推方式）</typeparam>
+    /// <typeparam name="TIDataPack">被观察者推的数据</typeparam>
+    interface IObservableEvent<TIObserver, TIDataPack>
+    {
+        /// <summary>
+        /// 被观察者数据变化时调用，通知观察者（推方式，event）
+        /// </summary>
+        event Action<TIObserver,TIDataPack> pushHolder;
     }
 }
