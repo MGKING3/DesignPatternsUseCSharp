@@ -46,6 +46,7 @@
     <Compile Include="IObservable.cs" />
     <Compile Include="IObserver.cs" />
     <Compile Include="Test.cs" />
+    <Compile Include="TestDecoratorPattern.cs" />
     <Compile Include="TestObserverPattern.cs" />
     <Compile Include="TestStrategyPattern.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -37,13 +37,15 @@ namespace com.mg.Utils.DesignPatterns.ObserverPattern
     /// 2016.12.22 By MG
     /// </para>
     /// </summary>
+    /// <typeparam name="TIObservable">被观察者接口（拉方式）</typeparam>
     /// <typeparam name="TIObserver">观察者接口（拉方式）</typeparam>
-    interface IObservable<TIObserver> : IObservableBase<TIObserver>
+    interface IObservable<TIObservable,TIObserver> : IObservableBase<TIObserver>
     {
         /// <summary>
         /// 被观察者数据变化时调用，通知观察者（拉方式）
         /// </summary>
-        void notifyObserverPull();
+        /// <param name="observable">被观察者，保留该引用，便于观察者拉取被观察者的数据</param>
+        void notifyObserverPull(TIObservable observable);
     }
 
     /// <summary>
@@ -52,15 +54,17 @@ namespace com.mg.Utils.DesignPatterns.ObserverPattern
     /// 2016.12.22 By MG
     /// </para>
     /// </summary>
+    /// <typeparam name="TIObservable">被观察者接口（推方式）</typeparam>
     /// <typeparam name="TIObserver">观察者接口（推方式）</typeparam>
     /// <typeparam name="TIDataPack">被观察者推的数据</typeparam>
-    interface IObservable<TIObserver, TIDataPack> : IObservableBase<TIObserver>
+    interface IObservable<TIObservable,TIObserver, TIDataPack> : IObservableBase<TIObserver>
     {
         /// <summary>
         /// 被观察者数据变化时调用，通知观察者（推方式）
         /// </summary>
+        /// <param name="observable">被观察者，保留该引用确保观察者知道是哪个被观察者推送的数据</param>
         /// <param name="dataPack">包含被观察者推给观察者的数据</param>
-        void notifyObserverPush(TIDataPack dataPack);
+        void notifyObserverPush(TIObservable observable, TIDataPack dataPack);
     }
 
     /// <summary>
@@ -69,13 +73,13 @@ namespace com.mg.Utils.DesignPatterns.ObserverPattern
     /// 2016.12.30 By MG
     /// </para>
     /// </summary>
-    /// <typeparam name="TIObserver">观察者接口（拉方式）</typeparam>
-    interface IObservableEvent<TIObserver>
+    /// <typeparam name="TIObservable">被观察者接口（拉方式）</typeparam>
+    interface IObservableEvent<TIObservable>
     {
         /// <summary>
         /// 被观察者数据变化时调用，通知观察者（推方式，event）
         /// </summary>
-        event Action<TIObserver> pullHolder;
+        event Action<TIObservable> pullHolder;
     }
 
     /// <summary>
@@ -84,13 +88,13 @@ namespace com.mg.Utils.DesignPatterns.ObserverPattern
     /// 2016.12.30 By MG
     /// </para>
     /// </summary>
-    /// <typeparam name="TIObserver">观察者接口（推方式）</typeparam>
+    /// <typeparam name="TIObservable">被观察者接口（推方式），确保观察者知道是哪个被观察者推送的数据</typeparam>
     /// <typeparam name="TIDataPack">被观察者推的数据</typeparam>
-    interface IObservableEvent<TIObserver, TIDataPack>
+    interface IObservableEvent<TIObservable, TIDataPack>
     {
         /// <summary>
         /// 被观察者数据变化时调用，通知观察者（推方式，event）
         /// </summary>
-        event Action<TIObserver,TIDataPack> pushHolder;
+        event Action<TIObservable, TIDataPack> pushHolder;
     }
 }

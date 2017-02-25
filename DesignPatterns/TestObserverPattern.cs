@@ -60,7 +60,8 @@ namespace com.mg.Test.DesignPatterns
          以下以上述的报社和订阅者的例子（只针对“售价改变”这一个情况）对【观察者模式】进行说明：
          一种是用普通的方法进行实现，再一种是用C#的event来实现。
          但是，经过测试，普通方法不可取，因为普通方法违反了封装性，导致任何人、事、物可以“冒充”
-         报社来通知订阅者，而event则可以保证封装性。详细代码如下：
+         报社来通知订阅者，而event则可以保证封装性。但是普通方法可以限定观察者是什么类型（实现接
+         口时），而event可以被任何类所观察，灵活。详细代码如下：
          */
         public static void test()
         {
@@ -84,6 +85,7 @@ namespace com.mg.Test.DesignPatterns
             //只有A订阅的情况，修改《天天晚报》的售价
             //注销订阅者B
             no.removeObserver(subB);
+            Console.WriteLine("注销订阅者B");
             Console.WriteLine("第二次修改：将《天天晚报》的售价改为6");
             no["天天晚报"] = 6;
 
@@ -102,7 +104,7 @@ namespace com.mg.Test.DesignPatterns
             但是却丧失了松耦合。综上，该方法不可取
             */
             Console.WriteLine();
-            no.notifyObserverPush("不安全触发！！！");
+            no.notifyObserverPush(new NewspaperOffice("某某报社"),"不安全触发！！！");
 #elif PULL
             //拉方式
             //A和B都有订阅的情况，修改《天天下午茶》的售价
@@ -112,6 +114,7 @@ namespace com.mg.Test.DesignPatterns
             //只有A订阅的情况，修改《天天晚报》的售价
             //注销订阅者B
             no.removeObserver(subB);
+            Console.WriteLine("注销订阅者B");
             Console.WriteLine("第二次修改：将《天天晚报》的售价改为16");
             no["天天晚报"] = 16;
 
@@ -130,7 +133,7 @@ namespace com.mg.Test.DesignPatterns
             但是却丧失了松耦合。综上，该方法不可取
             */
             Console.WriteLine("\n不安全触发！！！");
-            no.notifyObserverPull();
+            no.notifyObserverPull(new NewspaperOffice("某某报社"));
 #endif
             #endregion
 
@@ -154,6 +157,7 @@ namespace com.mg.Test.DesignPatterns
             //只有A订阅的情况，修改《天天晚报》的售价
             //注销订阅者B
             no.pushHolder -= subB.updateDataPush;
+            Console.WriteLine("注销订阅者B");
             Console.WriteLine("第二次修改：将《天天晚报》的售价改为6");
             no["天天晚报"] = 6;
 
@@ -176,6 +180,7 @@ namespace com.mg.Test.DesignPatterns
             //只有A订阅的情况，修改《天天晚报》的售价
             //注销订阅者B
             no.pullHolder -= subB.updateDataPull;
+            Console.WriteLine("注销订阅者B");
             Console.WriteLine("第二次修改：将《天天晚报》的售价改为16");
             no["天天晚报"] = 16;
 
@@ -199,7 +204,7 @@ namespace com.mg.Test.DesignPatterns
     /// <summary>
     /// 报社，被观察者，具有推方式和拉方式
     /// </summary>
-    class NewspaperOffice : IObservable<Subscriber, string>, Utils.DesignPatterns.ObserverPattern.IObservable<Subscriber>
+    class NewspaperOffice : IObservable<NewspaperOffice,Subscriber, string>, Utils.DesignPatterns.ObserverPattern.IObservable<NewspaperOffice,Subscriber>
     {
         private string name;
         /// <summary>
@@ -241,11 +246,11 @@ namespace com.mg.Test.DesignPatterns
                         int tempValue = newspapers[tempKey];
                         builder.Append("《" + tempKey + "》的售价为" + tempValue + ";");
                     }
-                    notifyObserverPush(builder.ToString());
+                    notifyObserverPush(this,builder.ToString());
 
 #elif PULL
                     //拉方式
-                    notifyObserverPull();
+                    notifyObserverPull(this);
 #endif
                 }
             }
@@ -277,21 +282,21 @@ namespace com.mg.Test.DesignPatterns
         /// <summary>
         /// 数据变化通知观察者时调用（拉方式）
         /// </summary>
-        public void notifyObserverPull()
+        public void notifyObserverPull(NewspaperOffice observable)
         {
             foreach(Subscriber sub in list)
             {
-                sub.updateDataPull(this);
+                sub.updateDataPull(observable);
             }
         }
         /// <summary>
         /// 数据变化通知观察者时调用（推方式）
         /// </summary>
         /// <param name="dataPack">被观察者推的数据包</param>
-        public void notifyObserverPush(string dataPack)
+        public void notifyObserverPush(NewspaperOffice observable,string dataPack)
         {
             foreach(Subscriber sub in list){
-                sub.updateDataPush(this, dataPack);
+                sub.updateDataPush(observable, dataPack);
             }
         }
         /// <summary>
@@ -324,7 +329,7 @@ namespace com.mg.Test.DesignPatterns
         public void updateDataPush(NewspaperOffice observable, string dataPack)
         {
             Console.WriteLine("**********" + name + "(推方式)**********");
-            Console.WriteLine("消息： " + dataPack);
+            Console.WriteLine("《" + observable.Name + "》消息： " + dataPack);
             Console.WriteLine("******************************");
         }
         /// <summary>
@@ -335,7 +340,7 @@ namespace com.mg.Test.DesignPatterns
         {
             Console.WriteLine("**********" + name + "(拉方式)**********");
             Console.WriteLine("我所关心的是报社的名称： " + observable.Name);
-            Console.WriteLine("我所关心的是《天天晚报》的售价： " + observable["天天晚报"]);
+            Console.WriteLine("我所关心的是《" + observable.Name + "》的售价： " + observable["天天晚报"]);
             Console.WriteLine("******************************");
         }
     }
@@ -437,7 +442,7 @@ namespace com.mg.Test.DesignPatterns
         public void updateDataPush(NewspaperOffice observable, string dataPack)
         {
             Console.WriteLine("**********" + name + "(推方式)**********");
-            Console.WriteLine("消息： " + dataPack);
+            Console.WriteLine("《" + observable.Name + "》消息： " + dataPack);
             Console.WriteLine("******************************");
         }
         /// <summary>
@@ -448,7 +453,7 @@ namespace com.mg.Test.DesignPatterns
         {
             Console.WriteLine("**********" + name + "(拉方式)**********");
             Console.WriteLine("我所关心的是报社的名称： " + observable.Name);
-            Console.WriteLine("我所关心的是《天天晚报》的售价： " + observable["天天晚报"]);
+            Console.WriteLine("我所关心的是《" + observable.Name + "》的售价： " + observable["天天晚报"]);
             Console.WriteLine("******************************");
         }
     }
